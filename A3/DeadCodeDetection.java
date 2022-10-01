@@ -61,14 +61,10 @@ public class DeadCodeDetection extends MethodAnalysis {
         Set<Stmt> deadCode = new TreeSet<>(Comparator.comparing(Stmt::getIndex));
         // Your task is to recognize dead code in ir and add it to deadCode
         Set<Stmt> liveCode = new TreeSet<>(Comparator.comparing(Stmt::getIndex));
-        //Queue<Stmt> queue = new LinkedList<>();
-        Set<Stmt> queue = new HashSet<>();
+        Queue<Stmt> queue = new LinkedList<>();
         queue.add(cfg.getEntry());
         while(!queue.isEmpty()){
-            //Stmt stmt = queue.poll();
-            Iterator<Stmt> it = queue.iterator();
-            Stmt stmt = it.next();
-            it.remove();
+            Stmt stmt = queue.poll();
             if(stmt instanceof AssignStmt<?,?> s && s.getLValue() instanceof Var var) {
                 if(!liveVars.getResult(stmt).contains(var) && hasNoSideEffect(s.getRValue())) {
                     queue.addAll(cfg.getSuccsOf(stmt));
